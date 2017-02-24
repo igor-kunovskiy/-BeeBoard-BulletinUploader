@@ -1,0 +1,122 @@
+Host: betaserver.beeboard.io
+Protocol: HTTPS
+Port: 443
+
+
+Group: Account
+Endpoint: Login
+Description: Authenticate to the system
+Parameters: Email, Password
+Method: GET
+Required headers: None
+Return value: JSON object with detailed login info
+Example: /Account/Login?Email=daniel@basezen.com&Password=abcdefgh
+Return example:
+{
+    "Success": true,
+    "Result": {
+	"FirstName":"Daniel",
+	"LastName":"Bromberg",
+	"Email":"daniel@basezen.com",
+	"Validated": 1,
+	"UUID":"a63d8487-7eb8-11e6-9248-0ebd4b548559",
+	"CreationDate":"2016-09-19T22:37:12.000Z",
+	"SessionKey":"ddcf07c329c0fe6ab84d0a4bffe0a3750124bb4d02c70548028f259c311deadc"
+    },
+    "Info":"New key assigned to daniel@basezen.com"
+}
+
+Group: Account
+Endpoint: ListContainers
+Description: Get the list of available channels owned by the given user ID.
+Required headers: Cookie: <cookie returned by Login>
+Parameters: OwnerUUID, NodeType. NodeType of '1' refers to the 'Channel' object type. NodeType of '2' is 'Bulletins'
+Return: UUID Dictionary of Nodes (Channels)
+Example: /Account/ListContainers?OwnerUUID=4B4D4D81-EE7B-11E6-B71B-0EBD4B548559&NodeType=1
+Return example:
+{
+    "Success": true,
+    "Result": {
+	"7da74031-ee7b-11e6-b71b-0ebd4b548559": {
+	    "OwnerUUID": "4b4d4d81-ee7b-11e6-b71b-0ebd4b548559",
+	    "DisplayName": "Main",
+	    "NodeType": 1,
+	    "UUID": "7da74031-ee7b-11e6-b71b-0ebd4b548559",
+	    "CreationDate": "2017-02-09T03:54:43.792Z",
+	    "ModificationDate": "2017-02-09T03:54:43.792Z"
+	},
+	"7da81888-ee7b-11e6-b71b-0ebd4b548559": {
+	    "OwnerUUID": "4b4d4d81-ee7b-11e6-b71b-0ebd4b548559",
+	    "DisplayName": "AllPhotos",
+	    "NodeType": 1,
+	    "UUID": "7da81888-ee7b-11e6-b71b-0ebd4b548559",
+	    "CreationDate": "2017-02-09T03:54:43.804Z",
+	    "ModificationDate": "2017-02-09T03:54:43.804Z"
+	},
+	"beeb0a5d-bee1-bb00-0000-000000000000": {
+	    "OwnerUUID": "beeb0a5d-0000-0000-0000-000000000000",
+	    "DisplayName": "BeeBoard",
+	    "NodeType": 1,
+	    "UUID": "beeb0a5d-bee1-bb00-0000-000000000000",
+	    "CreationDate": "2016-09-11T18:20:09.000Z",
+	    "ModificationDate": "2016-09-11T16:05:38.000Z"
+	},
+	"beeb0a5d-bee1-0000-0000-000000000000": {
+	    "OwnerUUID": "beeb0a5d-0000-0000-0000-000000000000",
+	    "DisplayName":"BeeBoard",
+	    "NodeType":1,
+	    "UUID":"beeb0a5d-bee1-0000-0000-000000000000",
+	    "CreationDate":"2016-07-15T01:12:33.000Z",
+	    "ModificationDate":"2016-07-15T01:12:33.000Z"
+	}
+    },
+    "Info": "Returned type 1 for micah_gianoulis@yahoo.com on behalf of daniel@basezen.com"
+}
+
+
+Group: Storage
+Endpoint: Upload
+Description: Upload a bulletin resource, usually an image or HTML content
+Parameters: UUID of the resource, as chosen by the client
+Method: POST
+Required headers: Cookie: <cookie returned by Login>; Content-Type: <image/jpeg or image/png or text/html>; Content-Length: <byte count of image>
+Return value: URL of stored resource (w/o host part) for later reference
+Example: /Storage/Upload?UUID=D0052C10-C92D-11E6-BEFD-BB745DC58712
+<binary data of image or UTF data of HTML>
+Return example:
+{
+    "Success": true,
+    "Result": {
+	"URL": "/Storage/Retrieve?FileName=accounts/daniel@basezen.com/image/d0052c10-c92d-11e6-befd-bb745dc58712.jpg"
+    }
+}
+
+
+Group: Storage
+Endpoint: Retrieve
+Description: Retrieve a static resource, usually an IMAGE or HTML document (essentially act like a simple web server)
+Parameters: FileName: path to resource, relative to '/bb/server/' on server. Same as returned by /Storage/Upload
+Method: GET
+Required headers: Cookie: <cookie returned by Login>
+Return value: Native resource format, just like any web server
+Example: /Storage/Retrieve?FileName=accounts/daniel@basezen.com/bulletin/d0052c10-c92d-11e6-befd-bb745dc58712.html
+Return example: <UTF-8 encoded HTML document>
+
+
+Group: MediaNode
+Endpoint: PublishNew
+Description: Create a new bulletin
+Parameters:
+  UUID: ID of the new bulletin, as chosen by client
+  NodeType: 0 for bulletin
+  DisplayName: (Optional) human readable description of bulletin
+  ParentUUID: UUID of the channel into which the bulletin should be published
+  URL: Storage URL of the bulletin, as returned by a previous /Storage/Upload call
+Example: /MediaNode/PublishNew?UUID=FEDFB540-EEF9-11E6-9B1F-E5B33C723AA4&URL=Storage/Retrieve%3FFileName%3Daccounts/ruthhousman@mac.com/bulletin/fedfb540-eef9-11e6-9b1f-e5b33c723aa4.html&NodeType=0&DisplayName=First%20Bulletin&ParentUUID=F8B815E0-EEF9-11E6-9B1F-E5B33C723AA4
+Return value: Success or failure, with info message.
+Return example: (since this transaction was already executed once, here is what happens when we do it again -- the bulletin ID already exists:)
+{
+    "Success": false,
+    "ErrorMessage": "Cannot publish to channel ID f8b815e0-eef9-11e6-9b1f-e5b33c723aa4: Deleted or invalid ID."
+}
+

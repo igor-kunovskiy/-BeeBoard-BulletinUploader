@@ -1,0 +1,28 @@
+<div class="uploaderForm">
+	<div id="step1">
+		<label class="step">Step #1:</label>
+		<select required="required" name="channel" ng-model="buService.channel" id="channel">
+			<option value="">Select the channel</option>
+			<option ng-repeat="channelItem in buService.channels" value="{{channelItem.UUID}}">{{channelItem.DisplayName}}</option>
+		</select>
+	</div>
+	<div id="step2" ng-show="buService.channel" class="ng-hide">
+		<label class="step">Step #2:</label>
+		<input type="file" name="image" id="imageInp" value="Select Image" onchange="angular.element(this).scope().showPreview(this)" accept="image/jpeg,image/pjpeg,image/png" />
+	</div>
+	<div id="step3" ng-show="buService.file !== null" >
+		<label class="step">Step #3:</label>
+		<div class="image_preview">
+			<img id="imagePreview" src="#"  alt="image preview" />
+		</div>
+		<div class="image_description">
+			<input type="text" ng-model="buService.imageDescription" />
+		</div>
+		<input type="button" value="Upload" ng-required="channel" ng-click="upload()"/>
+	</div>
+	<div id="step4" ng-show="buService.bulletinForPublish" class="ng-hide">
+		<label class="step">Step #4:</label>
+		<div class="progressbar"></div>
+		<input type="button" value="Publish" ng-click="publishBulletin()"/>
+	</div>	
+</div>

@@ -1,0 +1,37 @@
+TEST TASK FOR IGOR:
+
+Create a bulletin uploader webpage App that interacts with our system.
+
+See API_Reference.txt for the parts of our API that you need. Join us on Slack for any clarification you need.
+
+STEPS
+1. Show a web page that prompts the user for username and password.
+2. Once the user logs in, populate a drop-down with the list of possible channels
+3. Show a 'Select Image' button that allows the user to choose any JPG or PNG (no other types) from disk
+4. Show the chosen image in a small (2" roughly) preview window
+5. Once the preview is fully rendered, show an 'Upload' button that uses the Upload API to store on the server. Show a progress bar here.
+6. Once a channel has been chosen and the image has finished uploading, enable the 'Publish' button
+7. Once the user hits Publish, perform the necessary API steps to actually publish the bulletin. Then popup a new browser window that shows the published bulletin as retrieved from the server.
+
+Real example, according to server logs
+1. Feb 10 16:46:32 betaserver beeboard[3975]: 2017-02-10 16:46:32 server.js:308:7 (Server.handle_http_request) AURL /Account/Login?Email=daniel%40basezen.com&Password=zyxwvuts
+2. Feb 10 16:46:32 betaserver beeboard[3975]: 2017-02-10 16:46:32 server.js:308:7 (Server.handle_http_request) AURL /Account/ListContainers?NodeType=1
+3. Feb 10 16:46:32 betaserver beeboard[3975]: 2017-02-10 16:46:32 server.js:308:7 (Server.handle_http_request) AURL /Storage/Upload
+4. Feb 10 16:46:32 betaserver beeboard[3975]: 2017-02-10 16:46:32 server.js:308:7 (Server.handle_http_request) AURL /Storage/Upload
+5. Feb 10 16:46:32 betaserver beeboard[3975]: 2017-02-10 16:46:32 server.js:308:7 (Server.handle_http_request) AURL /MediaNode/PublishNew?ParentUUID=cd62b640-ed94-11e6-a406-af0c6751dc31&UUID=62fa2b10-efda-11e6-a481-3dd920b1bb9b&NodeType=0&URL=Storage%2FRetrieve%3FFileName%3Daccounts%2Fdaniel%40basezen.com%2Fbulletin%2F62fa0400-efda-11e6-8ed6-23179d904131.html
+6. Feb 10 16:46:32 betaserver beeboard[3975]: 2017-02-10 16:46:32 server.js:308:7 (Server.handle_http_request) AURL /Storage/Retrieve?FileName=accounts/daniel@basezen.com/bulletin/62fa0400-efda-11e6-8ed6-23179d904131.html
+
+
+Explanation of real example:
+1. User login
+2. List the available channels
+3. Upload the image, get its URL
+4. Upload the resulting HTML bulletin, get its URL
+5. Publish the URL to one of the channels
+6. Get the resulting bulletin to show to the user
+
+After step 3, within the client, embed this image URL into the supplied bulletin template dynamically
+After step 5, open a new browser tab showing the bulletin, resulting in the retrieval call in step 6
+
+
+This should work on an iPhone 5, 6, and 7plus in portrait mode on Safari and Chrome.
