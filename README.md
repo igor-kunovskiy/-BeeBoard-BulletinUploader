@@ -4,4 +4,5 @@ Test application: uploading new bulletins associated with already existing bulle
 Install & Run:
 
 npm i 
+
 npm start
