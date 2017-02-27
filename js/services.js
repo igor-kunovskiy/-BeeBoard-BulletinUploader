@@ -25,19 +25,20 @@ angular.module('BulletinUploader.services', ['ngStorage'])
 		}).then(function successCallback(response) {
 			service.isAuth = true;
 			service.authResult = response.data.Result;
-			
+			//Save data to SessionStorage Object of Window
 			$sessionStorage.auth = {
 				"isAuth": true,
 				"authResult": service.authResult
 			};
 			
+			//Setup Auth Session token from response for future authorized requests
 			$http.defaults.headers.common['Authorization'] = (service.authResult !== null ? service.authResult.SessionKey : "");
-			
+			//return to Main page
 			return $location.path('/');
 		}, function errorCallback(response) {
 			service.isAuth = false;
 			service.authResult = null;
-			
+			//echo server error message to page
 			return contrl.setError((response.data !== undefined ? response.data.ErrorMessage : ""));
 		});
 	};

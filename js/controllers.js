@@ -35,7 +35,7 @@ angular.module('BulletinUploader.controllers', ['BulletinUploader.services', 'ng
 	$scope.buService = buService;
 	
 	$scope.showPreview = function (imageInp) { //Here we show image using blob object URLs, in other case: we can upload image to the server and then show image through GET method
-		debugger;if (imageInp && imageInp.files) { // Checking the property `files` on nullable and zero-length
+		if (imageInp && imageInp.files) { // Checking the property `files` on nullable and zero-length
 			var imagePreview = document.getElementById('imagePreview');
 			
 			imagePreview.src = window.URL.createObjectURL(imageInp.files[0]);

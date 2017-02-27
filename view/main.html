@@ -16,9 +16,9 @@
 			<img id="imagePreview" src="#"  alt="image preview" />
 		</div>
 		<div class="image_description">
-			<input type="text" ng-model="buService.imageDescription" />
+			<input type="text" ng-model="buService.imageDescription" style="width: 127px;"/>
+			<input type="button" value="Upload" ng-required="channel" ng-click="upload()"/>
 		</div>
-		<input type="button" value="Upload" ng-required="channel" ng-click="upload()"/>
 	</div>
 	<div id="step4" ng-show="buService.bulletinForPublish" class="ng-hide">
 		<label class="step">Step #4:</label>
